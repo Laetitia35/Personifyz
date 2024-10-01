@@ -76,6 +76,9 @@ class Product
     #[ORM\ManyToOne(inversedBy: 'products')]
     private ?MainCategory $main_category = null;
 
+    #[ORM\Column]
+    private ?int $idPrintfull = null;
+
     public function __construct()
     {
         $this->options = new ArrayCollection();
@@ -342,6 +345,18 @@ class Product
     public function setMainCategory(?MainCategory $main_category): static
     {
         $this->main_category = $main_category;
+
+        return $this;
+    }
+
+    public function getIdPrintfull(): ?int
+    {
+        return $this->idPrintfull;
+    }
+
+    public function setIdPrintfull(int $idPrintfull): static
+    {
+        $this->idPrintfull = $idPrintfull;
 
         return $this;
     }

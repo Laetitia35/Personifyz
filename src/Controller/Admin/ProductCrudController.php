@@ -3,9 +3,18 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Product;
+use Doctrine\DBAL\Types\ArrayType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
@@ -24,36 +33,105 @@ class ProductCrudController extends AbstractCrudController
             ->setEntityLabelInPlural('Les produits');
     }
 
-    // exemple a configurer selon les champs entites 
-    
-    /*public function configureFields(string $pageName): iterable
-    {
-        return [
-            TextField::new('name')->setLabel('Nom')->setHelp('Nom de votre produit'),
-            SlugField::new('slug')->setLabel('URL')->setTargetFieldName('name')->setHelp('Url de votre produit généré automatiquement'),
-            TextEditorField::new('ingredient')->setLabel('Ingrédients')->setHelp('Liste des ingredients contenues dans le produit'),
-            TextEditorField::new('description')->setLabel('Description du produit vendu'),
-            ImageField::new('illustration')->setLabel('Image')->setUploadedFileNamePattern('[year]-[mounth]-[day]-[contenthash].[extension]')->setBasePath('/uploads')->setUploadDir('public/uploads'),
-            NumberField::new('degree')->setLabel('Degré')->setHelp("Pourcentage du volume d'alcool"),
-            NumberField::new('capacity')->setLabel('Capacité')->setHelp('Capacité du contenant en Litre'),
-            NumberField::new('price')->setLabel('Prix H.T')->setHelp('Prix H.T du produit sans le sigle €.'),
-            ChoiceField::new('tva')->setLabel('Taux de TVA')->setChoices([
-                '5,5%' => '5.5',
-                '10%' => '10',
-                '20%' => '20',
-        ]),
-            AssociationField::new('category')->setLabel('Catégorie')->setHelp('Catégorie à associé au produit'),
-        ];
-    }*/
-
-    /*
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id'),
-            TextField::new('title'),
-            TextEditorField::new('description'),
+            IntegerField::new('id')
+                ->onlyOnIndex(),
+
+            // Champ pour le titre du produit
+            TextField::new('title')
+                ->setLabel('Titre')
+                ->setHelp('Titre du produit'),
+            
+            // Champ pour le type du produit
+            TextField::new('type')
+                ->setLabel('Type')
+                ->setHelp('Type du produit (ex : électronique, vêtement)'),
+
+            // Champ pour le nom du type du produit
+            TextField::new('type_name')
+                ->setLabel('Nom du Type')
+                ->setHelp('Nom spécifique du type de produit'),
+
+            // Champ pour la marque du produit
+            TextField::new('brand')
+                ->setLabel('Marque')
+                ->setHelp('Marque du produit'),
+
+            // Champ pour le modèle du produit
+            TextField::new('model')
+                ->setLabel('Modèle')
+                ->setHelp('Modèle du produit'),
+
+            // Champ pour la description du produit
+            TextEditorField::new('description')
+                ->setLabel('Description')
+                ->setHelp('Description détaillée du produit'),
+
+            // Champ pour l'image du produit
+            ImageField::new('image')
+                ->setLabel('Image')
+                ->setUploadedFileNamePattern('[year]-[month]-[day]-[contenthash].[extension]')
+                ->setBasePath('/uploads/images')
+                ->setUploadDir('public/uploads/images')
+                ->setHelp('Image du produit. Le fichier sera automatiquement renommé.'), 
+
+            // Champ pour le nombre de variantes du produit
+            NumberField::new('variant_count')
+                ->setLabel('Nombre de Variantes')
+                ->setHelp('Nombre de variantes disponibles pour ce produit'),
+
+            // Champ pour la monnaie utilisée
+            TextField::new('currency')
+                ->setLabel('Devise')
+                ->setHelp('Devise utilisée pour le prix du produit (ex : EUR, USD)'),
+
+            // Champ pour les dimensions du produit
+            TextField::new('dimensions')
+                ->setLabel('Dimensions')
+                ->setHelp('Dimensions du produit (ex : 20x10x5 cm)')
+                ->onlyOnForms(),  // Seulement affiché lors de la création/édition du produit
+
+            // Champ pour le statut de fin de commercialisation du produit
+            BooleanField::new('is_discontinued')
+                ->setLabel('Fin de Commercialisation')
+                ->setHelp('Indique si le produit est arrêté'),
+
+            // Champ pour le temps moyen de traitement des commandes
+            NumberField::new('avg_fulfillment_time')
+                ->setLabel('Temps moyen de traitement')
+                ->setHelp('Temps moyen en jours pour traiter une commande de ce produit'),
+
+            // Champ pour le pays d'origine du produit
+            TextField::new('origin_country')
+                ->setLabel('Pays d\'Origine')
+                ->setHelp('Pays d\'origine du produit'),
+
+            // Association avec la catégorie principale
+            AssociationField::new('main_category')
+                ->setLabel('Catégorie principale')
+                ->setHelp('Catégorie principale du produit')
+                ->setCrudController(MainCategoryCrudController::class),
+
+            // Champ pour l'ID Printfull
+            NumberField::new('idPrintfull')
+                ->setLabel('ID Printfull')
+                ->setHelp('Identifiant du produit dans Printfull'),
+            
+            CollectionField::new('options')
+                ->setLabel('Options')
+                ->setHelp('Options du produit (ex : couleurs, tailles)')
+                ->allowAdd()  // Permet l'ajout de nouvelles options
+                ->allowDelete(),  // Permet de supprimer des options
+            
+            ArrayField::new('techniques')
+                ->setLabel('Techniques')
+                ->setHelp('Techniques de fabrication disponibles pour ce produit'),
+            
+            ArrayField::new('files')
+                ->setLabel('Fichiers')
+                ->setHelp('Liste des fichiers associés au produit (ex : mockup, images)')              
         ];
-    }
-    */
+    } 
 }

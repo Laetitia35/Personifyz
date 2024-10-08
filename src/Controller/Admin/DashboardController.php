@@ -56,8 +56,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Produits', 'fas fa-list', Product::class);
         yield MenuItem::linkToCrud('Options', 'fas fa-list', Option::class);
         yield MenuItem::linkToCrud('Valeurs des options', 'fas fa-list', OptionValue::class);
-        yield MenuItem::linkToCrud('Technique', 'fas fa-list', Technique::class);
-        yield MenuItem::linkToCrud('Image', 'fas fa-list', File::class);
-        yield MenuItem::linkToCrud('Couleur', 'fas fa-list', Color::class);
+        yield MenuItem::linkToCrud('Techniques', 'fas fa-list', Technique::class);
+        yield MenuItem::linkToCrud('Fichiers', 'fas fa-list', File::class);
+        yield MenuItem::linkToCrud('Couleurs', 'fas fa-list', Color::class);
     }
 }

@@ -3,9 +3,10 @@
 namespace App\Controller\Admin;
 
 use App\Entity\File;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class FileCrudController extends AbstractCrudController
@@ -15,14 +16,21 @@ class FileCrudController extends AbstractCrudController
         return File::class;
     }
 
-    /*
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+        
+            ->setEntityLabelInSingular("un fichier")
+            ->setEntityLabelInPlural("Les fichiers");
+    }
+    
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id'),
             TextField::new('title'),
-            TextEditorField::new('description'),
+            TextField::new('type'),
+            NumberField::new('addtional_price'),
+            ArrayField::new('product','Product')
         ];
     }
-    */
 }

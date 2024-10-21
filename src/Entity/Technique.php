@@ -25,6 +25,11 @@ class Technique
     #[ORM\ManyToOne(inversedBy: 'techniques')]
     private ?Product $product = null;
 
+    public function __toString()
+    {
+        return $this->display_name ?? '';
+    }
+
     public function getId(): ?int
     {
         return $this->id;

@@ -8,6 +8,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class TechniqueCrudController extends AbstractCrudController
@@ -29,12 +30,14 @@ class TechniqueCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('key')
+            IdField::new('id')->hideOnForm(),
+
+            TextField::new('cle')
             ->setLabel('valeur')
             ->setHelp(''),
 
             TextField::new('display_name')
-                ->setLabel('')
+                ->setLabel("nom d'affichage")
                 ->setHelp(''),
 
             BooleanField::new('is_default')

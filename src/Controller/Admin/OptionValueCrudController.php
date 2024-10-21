@@ -30,9 +30,7 @@ class OptionValueCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('title')
-                ->setLabel('titre')
-                ->setHelp(''),
+            IdField::new('id')->hideOnForm(),
 
             TextEditorField::new('value')
                 ->setLabel('valeur')

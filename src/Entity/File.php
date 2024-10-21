@@ -25,6 +25,11 @@ class File
     #[ORM\ManyToOne(inversedBy: 'files')]
     private ?Product $product = null;
 
+    public function __toString()
+    {
+        return $this->title ?? '';
+    }
+
     public function getId(): ?int
     {
         return $this->id;

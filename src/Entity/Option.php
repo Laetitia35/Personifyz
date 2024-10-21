@@ -38,6 +38,11 @@ class Option
     {
         $this->optionValues = new ArrayCollection();
     }
+    
+    public function __toString()
+    {
+        return $this->title ?? '';
+    }
 
     public function getId(): ?int
     {

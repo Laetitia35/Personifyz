@@ -36,8 +36,7 @@ class ProductCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            IntegerField::new('id')
-                ->onlyOnIndex(),
+            IdField::new('id')->hideOnForm(),
 
             // Champ pour le titre du produit
             TextField::new('title')

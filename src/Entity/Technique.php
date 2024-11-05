@@ -20,7 +20,7 @@ class Technique
     private ?string $display_name = null;
 
     #[ORM\Column]
-    private ?bool $is_default = null;
+    private ?bool $is_default = false;
 
     #[ORM\ManyToOne(inversedBy: 'techniques')]
     private ?Product $product = null;

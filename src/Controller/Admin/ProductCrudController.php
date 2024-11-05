@@ -95,7 +95,8 @@ class ProductCrudController extends AbstractCrudController
             // Champ pour le statut de fin de commercialisation du produit
             BooleanField::new('is_discontinued')
                 ->setLabel('Fin de Commercialisation')
-                ->setHelp('Indique si le produit est arrêté'),
+                ->setHelp('Indique si le produit est arrêté')
+                ->hideValueWhenFalse(),
 
             // Champ pour le temps moyen de traitement des commandes
             NumberField::new('avg_fulfillment_time')
@@ -107,16 +108,16 @@ class ProductCrudController extends AbstractCrudController
                 ->setLabel('Pays d\'Origine')
                 ->setHelp('Pays d\'origine du produit'),
 
+            // Champ pour l'ID Printfull
+            NumberField::new('idPrintfull')
+                ->setLabel('ID Printfull')
+                ->setHelp('Identifiant du produit dans Printfull'),
+
             // Association avec la catégorie principale
             AssociationField::new('main_category')
                 ->setLabel('Catégorie principale')
                 ->setHelp('Catégorie principale du produit')
                 ->setCrudController(MainCategoryCrudController::class),
-
-            // Champ pour l'ID Printfull
-            NumberField::new('idPrintfull')
-                ->setLabel('ID Printfull')
-                ->setHelp('Identifiant du produit dans Printfull'),
             
             CollectionField::new('options')
                 ->setLabel('Options')
@@ -124,13 +125,15 @@ class ProductCrudController extends AbstractCrudController
                 ->allowAdd()  // Permet l'ajout de nouvelles options
                 ->allowDelete(),  // Permet de supprimer des options
             
-            ArrayField::new('techniques')
+            AssociationField::new('techniques')
                 ->setLabel('Techniques')
-                ->setHelp('Techniques de fabrication disponibles pour ce produit'),
+                ->setHelp('Techniques de fabrication disponibles pour ce produit')
+                ->setCrudController(TechniqueCrudController::class),
             
-            ArrayField::new('files')
+            AssociationField::new('files')
                 ->setLabel('Fichiers')
-                ->setHelp('Liste des fichiers associés au produit (ex : mockup, images)')              
+                ->setHelp('Liste des fichiers associés au produit (ex : mockup, images)') 
+                ->setCrudController(FileCrudController::class),             
         ];
     } 
 }

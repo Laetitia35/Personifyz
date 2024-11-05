@@ -42,11 +42,12 @@ class TechniqueCrudController extends AbstractCrudController
 
             BooleanField::new('is_default')
                 ->setLabel('')
-                ->setHelp('vrai ou faux'),
+                ->setHelp('vrai ou faux')
+                ->hideValueWhenTrue(),
 
-            ArrayField::new('product','Product')
+            /*ArrayField::new('product','Product')
                 ->setLabel('')
-                ->setHelp(''),
+                ->setHelp(''),*/
         ];
     }
 }

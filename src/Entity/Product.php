@@ -39,7 +39,7 @@ class Product
 
     #[ORM\Column]
     private ?int $variant_count = null;
-
+    
     #[ORM\Column(length: 255)]
     private ?string $currency = null;
 
@@ -47,7 +47,7 @@ class Product
     private ?string $dimensions = null;
 
     #[ORM\Column]
-    private ?bool $is_discontinued = null;
+    private ?bool $is_discontinued = false;
 
     #[ORM\Column(nullable: true)]
     private ?int $avg_fulfillment_time = null;
@@ -79,11 +79,18 @@ class Product
     #[ORM\Column]
     private ?int $idPrintfull = null;
 
+    /**
+     * @var Collection<int, Color>
+     */
+    #[ORM\ManyToMany(targetEntity: Color::class, mappedBy: 'products')]
+    private Collection $colors;
+
     public function __construct()
     {
         $this->options = new ArrayCollection();
         $this->techniques = new ArrayCollection();
         $this->files = new ArrayCollection();
+        $this->colors = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -357,6 +364,33 @@ class Product
     public function setIdPrintfull(int $idPrintfull): static
     {
         $this->idPrintfull = $idPrintfull;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Color>
+     */
+    public function getColors(): Collection
+    {
+        return $this->colors;
+    }
+
+    public function addColor(Color $color): static
+    {
+        if (!$this->colors->contains($color)) {
+            $this->colors->add($color);
+            $color->addProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeColor(Color $color): static
+    {
+        if ($this->colors->removeElement($color)) {
+            $color->removeProduct($this);
+        }
 
         return $this;
     }

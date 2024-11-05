@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\OptionValueRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OptionValueRepository::class)]
@@ -21,6 +23,17 @@ class OptionValue
 
     #[ORM\ManyToOne(inversedBy: 'optionValues')]
     private ?Option $optiona = null;
+
+    /**
+     * @var Collection<int, Color>
+     */
+    #[ORM\ManyToMany(targetEntity: Color::class, mappedBy: 'optionValue')]
+    private Collection $colors;
+
+    public function __construct()
+    {
+        $this->colors = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -59,6 +72,33 @@ class OptionValue
     public function setOptiona(?Option $optiona): static
     {
         $this->optiona = $optiona;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Color>
+     */
+    public function getColors(): Collection
+    {
+        return $this->colors;
+    }
+
+    public function addColor(Color $color): static
+    {
+        if (!$this->colors->contains($color)) {
+            $this->colors->add($color);
+            $color->addOptionValue($this);
+        }
+
+        return $this;
+    }
+
+    public function removeColor(Color $color): static
+    {
+        if ($this->colors->removeElement($color)) {
+            $color->removeOptionValue($this);
+        }
 
         return $this;
     }

@@ -32,7 +32,7 @@ class FileCrudController extends AbstractCrudController
             TextField::new('title'),
             TextField::new('type'),
             NumberField::new('additional_price'),
-            ArrayField::new('product','Product')
+            /*ArrayField::new('product','Product')*/
         ];
     }
 }
